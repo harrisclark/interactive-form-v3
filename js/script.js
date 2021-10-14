@@ -14,30 +14,45 @@ selectJobRole.addEventListener('change', (e) => {
     }
 });
 
-const designEl = document.querySelector('select#design');
-const colorEl = document.querySelector('select#color');
+const designEl = document.querySelector('#design');
+const colorEl = document.querySelector('#color');
 const colorOpt = colorEl.children;
 
 colorEl.disabled = true;
+
+//availabe colors are displayed based upon selected design
 designEl.addEventListener('change', (e) => {
     colorEl.disabled = false;
-//get the index of the selected design option, find a way to remove attributes
-    const index = e.target.selectedIndex
-    console.log(index)
-    
-    for (let i = 1; i < colorOpt.length; i++) {
+    for (let i = 0; i < colorOpt.length; i++) {
         const selectedDesign = e.target;
         const themeOption = colorOpt[i].getAttribute('data-theme');
         // console.log('sel:',selectedDesign.value, i)
-         console.log('opt:',themeOption, i);
+         //console.log('opt:',themeOption, i);
         
         if (selectedDesign.value === themeOption) {
             colorOpt[i].hidden = false;
-            selectedDesign.children[index].setAttribute('selected', true);
+            colorOpt[i].setAttribute('selected', true);
         } else {
             colorOpt[i].hidden = true;
+            colorOpt[i].removeAttribute('selected');
         }
     }
 });
 
-//console.log('design',designEl,'color',colorEl,colorOpt);
+const registerAct = document.querySelector('#activities-box');
+const costAct = document.querySelector('#activities-cost');
+let totalCost = 0;
+
+registerAct.addEventListener('change', (e) => {
+    const dataCost = parseInt(e.target.getAttribute('data-cost'))
+    //console.log(dataCost)
+    if (e.target.checked) {
+        totalCost += dataCost;
+    } else {
+        totalCost -= dataCost;
+    }
+    console.log(totalCost)
+    costAct.textContent = `Total: $${totalCost}`
+});
+
+
