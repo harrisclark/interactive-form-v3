@@ -1,6 +1,6 @@
 
-const nameRef = document.querySelector('input#name.error-border');
-nameRef.focus();
+const nameInput = document.querySelector('input#name.error-border');
+nameInput.focus();
 
 const selectJobRole = document.querySelector('select#title');
 const otherJobRole = document.querySelector('input#other-job-role');
@@ -51,8 +51,73 @@ registerAct.addEventListener('change', (e) => {
     } else {
         totalCost -= dataCost;
     }
-    console.log(totalCost)
     costAct.textContent = `Total: $${totalCost}`
 });
 
+const payment = document.getElementById('payment');
+const credit = document.getElementById('credit-card');
+const paypal = document.getElementById('paypal');
+const bitcoin = document.getElementById('bitcoin');
 
+
+paypal.hidden = true;
+bitcoin.hidden = true;
+
+payment.children[1].setAttribute('selected', true);
+payment.addEventListener('change', (e) => {
+    const selectedPayment = e.target.value;
+    if (selectedPayment === 'paypal') {
+        credit.hidden = true;
+        paypal.hidden = false;
+        bitcoin.hidden = true;
+    } else if (selectedPayment === 'bitcoin') {
+        credit.hidden = true;
+        paypal.hidden = true;
+        bitcoin.hidden = false;
+    } else {
+        credit.hidden = false;
+        paypal.hidden = true;
+        bitcoin.hidden = true;
+    }
+});
+
+//variables for form validation. Will also be working with 'const nameInput' and 'const registerAct'
+const email = document.querySelector('#email');
+const cardNumber = document.querySelector('#cc-num');
+const zipCode = document.querySelector('#zip');
+const cvv = document.querySelector('#cvv');
+const form = document.querySelector('form');
+//console.log(email,cardNumber,zipCode,cvv,form)
+
+
+form.addEventListener('submit', (e) => {
+    const regexName = /^[a-z]+((\s)?([a-z])+){2} ?$/ig
+    const regexEmail = /^[^@]+@[^@.]+\.[a-z]+$/ig
+    const regexCard = /^(\d{4})[-| ]?(\d{4})[-| ]?(\d{4})[-| ]?(\d{4})$/g
+    const regexZip = /^\d{5}$/g
+    const regexCvv = /^\d{3}$/g
+    function invalidFormEntry(regex, input) {
+        if (regex.test(input.value) === false) {
+            e.preventDefault();
+            input.parentElement.classList.add('not-valid')
+        } else {
+            input.style.border = '';
+            input.parentElement.classList.remove('not-valid')
+        }
+    }
+    invalidFormEntry(regexName, nameInput)
+    invalidFormEntry(regexEmail, email)
+    invalidFormEntry(regexCard, cardNumber)
+    invalidFormEntry(regexZip, zipCode)
+    invalidFormEntry(regexCvv, cvv)
+});
+
+const checkboxes = document.querySelectorAll('[type="checkbox"]')
+for (let i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].addEventListener('focus', (e) => {
+        e.target.parentElement.classList.add('focus');
+    });
+    checkboxes[i].addEventListener('blur', (e) => {
+        e.target.parentElement.classList.remove('focus');
+    });
+}
