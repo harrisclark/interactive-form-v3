@@ -51,7 +51,7 @@ registerAct.addEventListener('change', (e) => {
     } else {
         totalCost -= dataCost;
     }
-    costAct.textContent = `Total: $${totalCost}`
+    costAct.textContent = `Total: $${totalCost}`;
 });
 
 const payment = document.getElementById('payment');
@@ -87,30 +87,39 @@ const cardNumber = document.querySelector('#cc-num');
 const zipCode = document.querySelector('#zip');
 const cvv = document.querySelector('#cvv');
 const form = document.querySelector('form');
-//console.log(email,cardNumber,zipCode,cvv,form)
-
 
 form.addEventListener('submit', (e) => {
-    const regexName = /^[a-z]+((\s)?([a-z])+){2} ?$/ig
+    //regular expressions for user input validation
+    const regexName = /^[a-z]+((\s)?([a-z])*){2} ?$/ig
     const regexEmail = /^[^@]+@[^@.]+\.[a-z]+$/ig
-    const regexCard = /^(\d{4})[-| ]?(\d{4})[-| ]?(\d{4})[-| ]?(\d{4})$/g
+    const regexCard = /^(\d{4})[-| ]?(\d{3,4})[-| ]?(\d{3,4})[-| ]?(\d{3,4})$/g
     const regexZip = /^\d{5}$/g
     const regexCvv = /^\d{3}$/g
     function invalidFormEntry(regex, input) {
         if (regex.test(input.value) === false) {
             e.preventDefault();
-            input.parentElement.classList.add('not-valid')
+            input.parentElement.classList.add('not-valid');
         } else {
             input.style.border = '';
-            input.parentElement.classList.remove('not-valid')
+            input.parentElement.classList.remove('not-valid');
         }
     }
+    //call 'invalidFormEntry' for each input field so they are all validated on every 'submit'
     invalidFormEntry(regexName, nameInput)
     invalidFormEntry(regexEmail, email)
     invalidFormEntry(regexCard, cardNumber)
     invalidFormEntry(regexZip, zipCode)
     invalidFormEntry(regexCvv, cvv)
+
+    //prevent 'submit' if no activities are selected
+    if (totalCost === 0) {
+        e.preventDefault();
+        registerAct.parentElement.classList.add('not-valid');
+    } else {
+        registerAct.parentElement.classList.remove('not-valid');
+    }
 });
+
 
 const checkboxes = document.querySelectorAll('[type="checkbox"]')
 for (let i = 0; i < checkboxes.length; i++) {
